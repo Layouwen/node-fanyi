@@ -1,0 +1,10 @@
+{
+  "name": "node-fanyi",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev src/main.ts"
+  },
+  "author": "liangyouwen <layouwen@gmail.com>",
+  "license": "MIT"
+}
