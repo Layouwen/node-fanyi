@@ -6,5 +6,11 @@
     "start": "ts-node-dev src/main.ts"
   },
   "author": "liangyouwen <layouwen@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.0"
+  }
 }
