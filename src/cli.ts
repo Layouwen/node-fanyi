@@ -5,7 +5,7 @@ const program = new commander.Command();
 
 program
   .version('0.0.1')
-  .name('fanyi')
+  .name('fy')
   .usage('<English>')
   .arguments('<English>')
   .action(function (english) {
