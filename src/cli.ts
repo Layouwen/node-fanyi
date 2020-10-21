@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import * as commander from 'commander';
 import {translate} from './main';
 
@@ -9,8 +10,7 @@ program
   .usage('<English>')
   .arguments('<English>')
   .action(function (english) {
-    console.log(english);
-    translate(english)
+    translate(english);
   });
 
 program.parse(process.argv);

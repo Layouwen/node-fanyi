@@ -1,16 +1,24 @@
 {
   "name": "node-fanyi",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "dist/main.js",
+  "files": [
+    "dist/**/*.js"
+  ],
+  "bin": {
+    "fy": "dist/cli.js"
+  },
   "scripts": {
     "start": "ts-node-dev src/main.ts"
   },
   "author": "liangyouwen <layouwen@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "commander": "^6.1.0"
+    "commander": "^6.1.0",
+    "md5": "^2.3.0"
   },
   "devDependencies": {
+    "@types/md5": "^2.2.0",
     "@types/node": "^14.14.0"
   }
 }

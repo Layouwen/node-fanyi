@@ -1,37 +1,76 @@
 import * as https from "https";
 import * as queryString from "querystring";
+import md5 = require("md5");
+import {appId, appSecret} from "./private";
 
-export const translate = (word) => {
-  console.log('translate');
-  console.log(word);
+type ErrorMap = {
+  [key: string]: string
+}
+const errorMap: ErrorMap = {
+  52003: '用户认证失败',
+  54001: '签名错误',
+  54004: '账户余额不足',
+};
+
+export const translate = (word: string) => {
+  const salt = Math.random();
+  const sign = md5(appId + word + salt + appSecret);
+  let from, to;
+
+  if (/[a-zA-Z]/.test(word[0])) {
+    from = 'en';
+    to = 'zh';
+  } else {
+    from = 'zh';
+    to = 'en';
+  }
 
   const query: string = queryString.stringify({
-    q:'hello',
-    from: 'en',
-    to: 'zh',
-    appid: '20201021000595103',
-    salt: Math.random(),
-    sign: md5()
-  })
+    q: word,
+    appid: appId,
+    from, to, salt, sign
+  });
 
   const options = {
-    hostname: 'api.fanyi.baidu.com',
+    hostname: 'fanyi-api.baidu.com',
     port: 443,
-    path: '/api/trans/vip/translate',
+    path: '/api/trans/vip/translate?' + query,
     method: 'GET'
   };
 
-  const req = https.request(options, (res) => {
-    console.log('状态码:', res.statusCode);
-    console.log('请求头:', res.headers);
-
-    res.on('data', (d) => {
-      process.stdout.write(d);
+  const request = https.request(options, (response) => {
+    let chunks: Buffer[] = [];
+    response.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+    response.on('end', () => {
+      const string = Buffer.concat(chunks).toString();
+      type BaiduResult = {
+        error_code?: string;
+        error_msg?: string;
+        from: string;
+        to: string;
+        trans_result: {
+          src: string;
+          dst: string;
+        }[]
+      }
+      const object: BaiduResult = JSON.parse(string);
+      if (object.error_code) {
+        console.error(errorMap[object.error_code] || object.error_msg);
+        console.log('编译错误')
+        process.exit(2);
+      } else {
+        object.trans_result.map(obj => {
+          console.log(obj.dst);
+        });
+        process.exit(0);
+      }
     });
   });
 
-  req.on('error', (e) => {
+  request.on('error', (e) => {
     console.error(e);
   });
-  req.end();
+  request.end();
 };
