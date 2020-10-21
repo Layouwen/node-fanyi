@@ -1,5 +1,5 @@
 {
-  "name": "node-fanyi",
+  "name": "easy-fanyi",
   "version": "0.0.1",
   "main": "dist/main.js",
   "files": [
